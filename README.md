@@ -6,8 +6,7 @@
 	3. Unzip chromedriver
 	4. Move file to usr/local/bin 
     ```
-    cd Downloads
-    mv chromedriver /usr/local/bin
+     mv /Downloads/chromedriver /usr/local/bin
     ```
 2. Install Brew 
 	1. Go to: https://brew.sh
@@ -15,14 +14,9 @@
 	```
 	brew install python3
 	```
-4. Check that Python 3 is installed
+4. Install Selenium
 	```
-	python3
-	quit()
-	```
-5. Install Selenium
-	```
-	pip install selenium
+	pip3 install selenium
 	```
 
 Execute "run" to to launch your script!
