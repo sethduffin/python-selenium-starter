@@ -1,7 +1,13 @@
+# Selenium for Python extentions by Seth Duffin
+# Version: 2.1
+# Updated: 5/7/2020
+
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.action_chains import ActionChains
+from time import sleep
 import sys
+
 
 driver = None
 action = None
@@ -11,8 +17,8 @@ def set_driver(driver_value,action_value=None):
     driver = driver_value
     action = action_value
 
-# Custom Made By seth
-def find(self,method,selector,forceList=False):
+
+def find(self,method,selector,force_list=False,**kwargs):
     content = self
     elements = []
     if method == 'class':
@@ -37,13 +43,36 @@ def find(self,method,selector,forceList=False):
         elements = content.find_elements_by_xpath(".//*[@"+method+"='"+selector+"']")
 
     if len(elements) == 0:
-        if forceList:
-            return elements
+        if force_list:
+            if "wait" in kwargs:
+                time = 0
+                while time <= kwargs["wait"]:
+                    try:
+                        return list(content.find(method,selector))
+                    except Exception as e:
+                        pass
+                    time += 1
+                else:
+                    return elements
+            else:
+                return elements
         else:
-            raise Exception("No element matching criteria: %s = '%s'" % (method,selector)) 
-            return None
+            if "wait" in kwargs:
+                time = 0
+                while time <= kwargs["wait"]:
+                    try:
+                        return content.find(method,selector)
+                    except Exception as e:
+                        pass
+                    time += 1
+                else:
+                    raise Exception("No element matching criteria: %s = '%s'" % (method,selector)) 
+                    return None
+            else:
+                raise Exception("No element matching criteria: %s = '%s'" % (method,selector)) 
+                return None
     elif len(elements) == 1:
-        if forceList:
+        if force_list:
             return elements
         else:
             return elements[0]
@@ -82,18 +111,40 @@ def up(self,num=1):
     for i in range(num):
         elem = elem.find_element_by_xpath('..')
     return elem
+
+def clickable(self):
+    try:
+        self.click()
+        return True
+    except:
+        return False
+
+
+def wait_until(self,condition,time=5):
+    element = self
+    wait = 0
+    while wait < time:
+        try:
+            if eval(condition,None,locals()):
+                return element
+        except:
+            pass
+        sleep(.1)
+        wait += 0.1
+    else:
+        raise Exception('Couldn\'t find element matching condition "%s"' % (condition))
     
-exts = ['find','flag','send','up','delete','strong_click']
+def do(self):
+    self.perform()
+    action.reset_actions()
+
+
+exts = ['find','flag','send','up','delete','strong_click',"wait_until","clickable"]
+
 
 for ext in exts:
     exec('WebDriver.'+ext+' = '+ext)
     exec('WebElement.'+ext+' = '+ext)
-
-# -------- Action Chains -------
-
-def do(self):
-    self.perform()
-    action.reset_actions()
 
 ActionChains.do = do
 
