@@ -21,6 +21,6 @@
 
 Execute "run" to to launch your script!
 
-Note: On the first lauch it will ask you to verify chromedriver. To do this, go to System Preferences > Security & Privacy > General > chomedriver: Allow anyways
+Note: On the first launch it will ask you to verify chromedriver. To do this, go to System Preferences > Security & Privacy > General > chomedriver: Allow anyways
 
 Refer to [Selenium with Python](https://selenium-python.readthedocs.io/) for detailed docs
